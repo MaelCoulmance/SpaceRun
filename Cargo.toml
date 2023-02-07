@@ -1,0 +1,27 @@
+[package]
+name = "space_run"
+version = "0.1.0"
+edition = "2021"
+authors = ["Maël Coulmance"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy = "0.9"
+bevy_render = "0.9"
+bevy_audio = "0.9"
+
+[workspace]
+resolver = "2"
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+opt-level = 3
+
+[profile.release.package."*"]
+opt-level = 3
