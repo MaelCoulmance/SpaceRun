@@ -1,11 +1,22 @@
+//! Un plugin qui permet de gérer la parallax du fond d'écran, en
+//! des mouvements du joueur. Les differents layer sont représentés
+//! un [`SpriteBundle`] et un [`BackgroundSpeed`].
+//! Ce plugin défini également une structure [`BackgroundAssets`]
+//! qui permet de stocker les images des differents layers.
+
 use super::*;
 
+/// Composant représentant la vitesse de mouvement d'un layer
 #[derive(Component)]
 struct BackgroundSpeed(pub f32);
 
+/// Resource permettant de stocker les differentes images, pour
+/// eviter de devoir les recharger depuis les fichiers
 #[derive(Resource)]
 struct BackgroundAssets(pub HashMap<i32, Handle<Image>>);
 
+
+/// Plugin permettant de gérer la parallax du fond d'écran
 pub struct BackgroundPlugin;
 
 impl Plugin for BackgroundPlugin {
@@ -18,6 +29,9 @@ impl Plugin for BackgroundPlugin {
 }
 
 
+/// Système d'initialisation du plugin [`BackgroundPlugin`]. Le système
+/// s'occupe de créer une caméra pour l'application, puis charge les différents
+/// layers du fond d'écran et crée les differentes instances.
 fn spawn_background_system(
     mut commands: Commands,
     server: Res<AssetServer>,
@@ -146,6 +160,9 @@ fn spawn_background_system(
 }
 
 
+/// Système de mise à jour du fond d'écran.
+/// Le système reçoit les [`PlayerMoveEvent`], et déplace les differents
+/// layers en fonction de la direction du joueur et de la vitesse relative au layers.
 fn move_background_system(
     mut events: EventReader<PlayerMoveEvent>,
     mut queries: Query<(&mut Transform, &BackgroundSpeed)>
