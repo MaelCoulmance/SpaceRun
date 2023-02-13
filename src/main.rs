@@ -19,5 +19,6 @@ fn main() {
         .add_plugin(BackgroundPlugin)
         .add_plugin(PlayerMovePlugin)
         .add_plugin(SpaceShipPlugin)
+        .add_plugin(PewPewPlugin)
         .run();
 }

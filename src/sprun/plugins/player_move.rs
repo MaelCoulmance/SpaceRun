@@ -24,49 +24,55 @@ impl Plugin for PlayerMovePlugin {
 /// envoie un [`PlayerMoveEvent`] à l'application si une demande de 
 /// mouvement a été détectée.
 fn handle_input_system(
-    mut writer: EventWriter<PlayerMoveEvent>,
+    mut move_writer: EventWriter<PlayerMoveEvent>,
+    mut pewpew_writer: EventWriter<PewPewShootedEvent>,
     keyboard_input: Res<Input<KeyCode>>,
-    mut mouse_input: EventReader<MouseMotion>
+    mut mouse_input: EventReader<MouseMotion>,
+    mouse_click: Res<Input<MouseButton>>
 ) {
     let mut moving = false;
 
     if keyboard_input.pressed(KeyCode::Up) {
-        writer.send(PlayerMoveEvent(PlayerMove::Up));
+        move_writer.send(PlayerMoveEvent(PlayerMove::Up));
         moving = true;
     }
     if keyboard_input.pressed(KeyCode::Down) {
-        writer.send(PlayerMoveEvent(PlayerMove::Down));
+        move_writer.send(PlayerMoveEvent(PlayerMove::Down));
         moving = true;
     }
     if keyboard_input.pressed(KeyCode::Left) {
-        writer.send(PlayerMoveEvent(PlayerMove::Left));
+        move_writer.send(PlayerMoveEvent(PlayerMove::Left));
         moving = true;
     }
     if keyboard_input.pressed(KeyCode::Right) {
-        writer.send(PlayerMoveEvent(PlayerMove::Right));
+        move_writer.send(PlayerMoveEvent(PlayerMove::Right));
         moving = true;
+    }
+
+    if keyboard_input.pressed(KeyCode::Space) || mouse_click.pressed(MouseButton::Left) {
+        pewpew_writer.send(PewPewShootedEvent {});
     }
 
     for evt in mouse_input.iter() {
         if evt.delta.x > 0. {
-            writer.send(PlayerMoveEvent(PlayerMove::Right));
+            move_writer.send(PlayerMoveEvent(PlayerMove::Right));
             moving = true;
         }
         if evt.delta.x < 0. {
-            writer.send(PlayerMoveEvent(PlayerMove::Left));
+            move_writer.send(PlayerMoveEvent(PlayerMove::Left));
             moving = true;
         }
         if evt.delta.y < 0. {
-            writer.send(PlayerMoveEvent(PlayerMove::Up));
+            move_writer.send(PlayerMoveEvent(PlayerMove::Up));
             moving = true;
         }
         if evt.delta.y > 0. {
-            writer.send(PlayerMoveEvent(PlayerMove::Down));
+            move_writer.send(PlayerMoveEvent(PlayerMove::Down));
             moving = true;
         }
     }
 
     if !moving {
-        writer.send(PlayerMoveEvent(PlayerMove::None));
+        move_writer.send(PlayerMoveEvent(PlayerMove::None));
     }
 }

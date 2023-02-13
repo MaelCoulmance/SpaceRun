@@ -65,7 +65,7 @@ fn spawn_spaceship_system(
                     ..default()
                 },
                 texture: assets.0.get(&SpaceShipPosition::Neutral0).unwrap().clone(),
-                transform: Transform::from_xyz(0., -(SCREEN_HEIGHT/2.) + (SPACESHIP_HEIGHT*2.), 8.),
+                transform: Transform::from_xyz(0., -(SCREEN_HEIGHT/2.) + (SPACESHIP_HEIGHT*2.), ELEMENTS_Z),
                 ..default()
             }
         )
