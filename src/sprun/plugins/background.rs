@@ -23,6 +23,7 @@ impl Plugin for BackgroundPlugin {
     fn build(&self, app: &mut App) {
         app
             .insert_resource(BackgroundAssets(HashMap::new()))
+            .insert_resource(BackgroundLocker(false))
             .add_startup_system(spawn_background_system)
             .add_system(move_background_system);
     }
@@ -165,22 +166,28 @@ fn spawn_background_system(
 /// layers en fonction de la direction du joueur et de la vitesse relative au layers.
 fn move_background_system(
     mut events: EventReader<PlayerMoveEvent>,
-    mut queries: Query<(&mut Transform, &BackgroundSpeed)>
+    mut queries: Query<(&mut Transform, &BackgroundSpeed)>,
+    locker: Res<BackgroundLocker>
 ) {
-    for evt in events.iter() {
-        for (mut pos, speed) in queries.iter_mut() {
-            match evt.0 {
-                PlayerMove::Down => {
-                    pos.translation.y += speed.0;
-                },
-                PlayerMove::Up => {
-                    pos.translation.y -= speed.0;
-                },
-                PlayerMove::Left => {
-                    pos.translation.x += speed.0;
-                },
-                PlayerMove::Right => {
-                    pos.translation.x -= speed.0;
+    if !locker.0 {
+        for evt in events.iter() {
+            for (mut pos, speed) in queries.iter_mut() {
+                match evt.0 {
+                    PlayerMove::Down => {
+                        pos.translation.y += speed.0;
+                    },
+                    PlayerMove::Up => {
+                        pos.translation.y -= speed.0;
+                    },
+                    PlayerMove::Left => {
+                        pos.translation.x += speed.0;
+                    },
+                    PlayerMove::Right => {
+                        pos.translation.x -= speed.0;
+                    },
+                    PlayerMove::None => {
+                        pos.translation.y += speed.0 / 2.;
+                    }
                 }
             }
         }
