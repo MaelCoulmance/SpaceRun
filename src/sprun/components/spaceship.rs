@@ -1,8 +1,14 @@
 use super::*;
 
+/// Un tag pour détecter les entitées représentant un vaisseau
 #[derive(Component)]
 pub struct SpaceShip;
 
+/// Une énumeration indiquant l'orientation actuelle du vaisseau.
+/// Cette énumération est utilisée de pair avec [`SpaceShipPosition`]
+/// pour animer le vaisseau lors de ses mouvements.
+/// [`SpaceShipOrientation`] represente l'orientation globale du vaisseau,
+/// indépendemment de l'image utilisée pour dessiner son [`Sprite`]
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub enum SpaceShipOrientation {
     Left,
@@ -10,6 +16,12 @@ pub enum SpaceShipOrientation {
     Right
 }
 
+/// Un énumeration indiquant l'image actuellement utilisée pour dessiner
+/// le [`Sprite`] relatif à un [`SpaceShip`].
+/// Cette énumération est utilisée de pair avec [`SpaceShipOrientation`]
+/// pour animer le vaisseau lors de ses mouvements.
+/// [`SpaceShipPosition`] représente l'orientation actuelle du vaisseau,
+/// et ainsi choisir la bonne image pour animer ce dernier.
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub enum SpaceShipPosition {
     Neutral0,
@@ -27,6 +39,18 @@ pub enum SpaceShipPosition {
 }
 
 impl SpaceShipPosition {
+    /// Determine l'image utilisée pour dessiner un [`SpaceShip`] lors de
+    /// la prochaine sprite, en fonction de l'image actuelle et de la
+    /// nouvelle orientation du vaisseau
+    /// 
+    /// ### Parametres :
+    /// - [`self`]() : La position actuelle du vaisseau à l'écran
+    /// - [`orientation`]() : L'orientation du vaisseau lors de la prochaine
+    ///   sprite
+    /// 
+    /// ### Valeur de retour:
+    /// 
+    /// La [`SpaceShipPosition`] utilisée lors de la prochaine frame 
     pub fn get_next(self, orientation: SpaceShipOrientation) -> Self {
         use SpaceShipOrientation::*;
         
@@ -61,14 +85,26 @@ impl SpaceShipPosition {
     }
 }
 
+
+/// Un dictionnaire contenant les images utilisées pour représenter un [`SpaceShip`]
+/// à l'écran
+/// 
+/// - clés: des [`SpaceShipPosition`]
+/// - valeurs: l'image correspondant à la position du vaisseau
 #[derive(Resource)]
 pub struct SpaceShipAssets(pub HashMap<SpaceShipPosition, Handle<Image>>);
 
+/// Une ressource permettant de garder en mémoire l'orientation actuelle du vaisseau
 #[derive(Resource)]
 pub struct SpaceShipCurrentDir(pub SpaceShipOrientation);
 
+/// Une ressource permettant de garder en mémoire la position actuelle du vaisseau
 #[derive(Resource)]
 pub struct SpaceShipCurrentPos(pub SpaceShipPosition);
 
+/// Le framerate de l'animation du vaisseau
+/// Le framerate est initialisée avec la constante [`SPACESHIP_DELAY`][delay]
+/// 
+/// [delay]: crate::sprun::consts::SPACESHIP_DELAY
 #[derive(Resource)]
 pub struct SpaceShipAnimationDelay(pub Timer);

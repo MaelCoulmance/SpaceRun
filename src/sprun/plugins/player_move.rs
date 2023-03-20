@@ -2,9 +2,15 @@
 //! Ce module définie un événement [`PlayerMoveEvent`] qui seras déclenché
 //! à chaque fois que le joueur fais bouger son vaisseau (soit avec les touches
 //! du clavier, soit avec la souris).
+use crate::sprun::{
+    prelude::*,
+    player_move::*,
+    pewpew::PewPewShootedEvent
+};
+
 use bevy::input::mouse::MouseMotion;
 
-use super::*;
+//use super::*;
 
 
 /// Plugin qui gère la lecture des entrées de l'utilisateur

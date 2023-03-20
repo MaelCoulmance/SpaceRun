@@ -1,7 +1,5 @@
 use super::*;
 
-
-
 /// Un locker pour le fond d'écran.
 /// On décide que le vaisseau est limité dans ses mouvements.
 /// Il ne peut pas sortir de l'écran et ne peut pas aller plus loins

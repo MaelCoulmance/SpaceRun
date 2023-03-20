@@ -1,5 +1,11 @@
-use super::*;
-
+//use super::*;
+use crate::sprun::{
+    prelude::*,
+    spaceship::*,
+    consts::*,
+    player_move::{PlayerMove, PlayerMoveEvent},
+    background::BackgroundLocker
+};
 
 pub struct SpaceShipPlugin;
 
@@ -9,7 +15,7 @@ impl Plugin for SpaceShipPlugin {
             .insert_resource(SpaceShipAssets(HashMap::new()))
             .insert_resource(SpaceShipCurrentDir(SpaceShipOrientation::Neutral))
             .insert_resource(SpaceShipCurrentPos(SpaceShipPosition::Neutral0))
-            .insert_resource(SpaceShipAnimationDelay(Timer::from_seconds(0.1, TimerMode::Repeating)))
+            .insert_resource(SpaceShipAnimationDelay(Timer::from_seconds(SPACESHIP_DELAY, TimerMode::Repeating)))
             .add_startup_system(spawn_spaceship_system)
             .add_system(update_spaceship_view_system)
             .add_system(move_spaceship_system);

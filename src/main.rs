@@ -1,5 +1,10 @@
 mod sprun;
-use sprun::*;
+
+use bevy::prelude::*;
+use sprun::{
+    consts::{SCREEN_HEIGHT, SCREEN_WIDTH},
+    SpaceRunPlugin
+};
 
 fn main() {
     App::new()
@@ -16,9 +21,6 @@ fn main() {
             },
             ..default()
         }))
-        .add_plugin(BackgroundPlugin)
-        .add_plugin(PlayerMovePlugin)
-        .add_plugin(SpaceShipPlugin)
-        .add_plugin(PewPewPlugin)
+        .add_plugin(SpaceRunPlugin)
         .run();
 }

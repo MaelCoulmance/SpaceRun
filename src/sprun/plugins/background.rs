@@ -4,7 +4,11 @@
 //! Ce plugin défini également une structure [`BackgroundAssets`]
 //! qui permet de stocker les images des differents layers.
 
-use super::*;
+use crate::sprun::{
+    prelude::*, 
+    background::*,
+    player_move::{PlayerMove, PlayerMoveEvent}
+};
 
 /// Composant représentant la vitesse de mouvement d'un layer
 #[derive(Component)]

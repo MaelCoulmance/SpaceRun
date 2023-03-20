@@ -1,11 +1,6 @@
-mod player_moves;
-mod spaceship;
-mod background;
-mod pewpew;
+pub mod player_moves;
+pub mod spaceship;
+pub mod background;
+pub mod pewpew;
 
-use super::*;
-
-pub use player_moves::*;
-pub use spaceship::*;
-pub use background::*;
-pub use pewpew::*;
+use super::prelude::*;
