@@ -134,6 +134,7 @@ fn handle_colisions_system(
     mut last_kill: ResMut<EnemiesLastKill>
 ) {
     let mut to_be_removed = Vec::new();
+    let was_empty = entities.0.is_empty();
 
     for evt in server.iter() {
         match evt {
@@ -152,7 +153,7 @@ fn handle_colisions_system(
                     .collect();
 
 
-    if entities.0.is_empty() {
+    if entities.0.is_empty() != was_empty {
         last_kill.0 = Instant::now();
     }
 }
