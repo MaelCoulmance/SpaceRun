@@ -5,7 +5,8 @@ use crate::sprun::{
     prelude::*,
     pewpew::*,
     consts::*,
-    spaceship::SpaceShip
+    spaceship::SpaceShip,
+    colisions::ColisionEvent
 };
 
 
@@ -26,7 +27,8 @@ impl Plugin for PewPewPlugin {
             .insert_resource(PewPewOnScreen(LinkedList::new()))
             .add_startup_system(init_pewpew_system)
             .add_system(spawn_new_pewpew_system)
-            .add_system(update_pewpew_system);
+            .add_system(update_pewpew_system)
+            .add_system(handle_colisions_system);
     }
 }
 
@@ -145,4 +147,28 @@ fn update_pewpew_system(
 
     #[cfg(feature = "debug_pewpew")]
     println!("Number of pewpew entities currently displayed: {}", entities.0.len());
+}
+
+fn handle_colisions_system(
+    mut commands: Commands,
+    mut entities: ResMut<PewPewOnScreen>,
+    mut server: EventReader<ColisionEvent>
+) {
+    let mut to_be_removed = Vec::new();
+
+    for evt in server.iter() {
+        match evt {
+            ColisionEvent::Enemy_SpaceShip(_) => continue,
+            ColisionEvent::PewPew_Enemy(idp, _) => {
+                commands.get_entity(*idp).unwrap().despawn();
+                to_be_removed.push(*idp);
+            }
+        }
+    }
+
+    entities.0 = entities.0
+                    .clone()
+                    .into_iter()
+                    .filter(|x| !to_be_removed.contains(x))
+                    .collect();
 }

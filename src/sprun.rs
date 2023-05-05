@@ -35,6 +35,16 @@ mod spaceship {
     pub use super::components::spaceship::*;
 }
 
+mod enemies {
+    pub use super::plugins::EnemiesPlugin;
+    pub use super::components::enemies::*;
+}
+
+mod colisions {
+    pub use super::plugins::ColisionsPlugin;
+    pub use super::components::colisions::*;
+}
+
 
 pub mod consts {
     pub const SCREEN_WIDTH: f32 = 600.;
@@ -56,6 +66,19 @@ pub mod consts {
     pub const PEWPEW_DELAY: f32 = 0.2;
 
     pub const ELEMENTS_Z: f32 = 8.;
+
+    pub const ENEMY_SPAWN_DELAY: f32 = 2.;
+
+    pub const ENEMY_FULL_LINE_LENGTH: usize = (SCREEN_WIDTH / ENEMY_WIDTH) as usize - 1;
+    //pub const ENEMY_HALF_LINE_LENGTH: usize = ENEMY_FULL_LINE_LENGTH / 2;
+    //pub const ENEMY_QUARTER_LINE_LENGTH: usize = ENEMY_HALF_LINE_LENGTH / 2;
+
+    pub const ENEMY_WIDTH: f32 = 30.;
+    pub const ENEMY_HEIGHT: f32 = 25.;
+
+    pub const ENEMY_MOVE_DELAY: f32 = 0.1;
+
+    pub const ENEMY_MOVE_OFFSET: f32 = 1.5;
 }
 
 pub use plugins::SpaceRunPlugin;
