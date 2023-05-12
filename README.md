@@ -44,7 +44,54 @@ L'autre difficulté que j'ai rencontrée était que je voulais que les ennemies 
 direction du joueur. Le problème était ici de récupérer des coordonnées aléatoires qui correspondent à la position
 d'un ennemi et d'y faire spawn un projectile dirigé vers le joueur.
 
-## III. Compilation du programme
+## III. Idées d'amélioration
+
+### Ajout d'un système de points de vie et de score
+
+On pourrait ajouter un système de points de vie pour le joueur ainsi que pour les ennemis.
+Pour ce faire on peut réutiliser le code existant en le modifiant un peu.
+
+- Pour les points de vie des ennemis, on a déjà implémenté une structure `Enemy` qui contient
+en attribut `bonus` et `pv`qui représentent respectivement le bonus accordé au joueur si cet ennemi
+est tué et le nombre de points de vies restant à l'ennemi.
+- Pour les points de vie est le score du joueur, on pourrais modifier la structure `SpaceShip` pour qu'au
+lieu de n'être qu'un simple tag, elle stocke en attribut les pv et le score du joueur.
+- On pourrais ajouter une ressource `NewScore` au programme, qui serait chargé de comptabiliser les points
+de score a donner au joueur à chaque frame.
+
+Ensuite, on modifierais le système de gestion de collision des ennemis (`handle_colisions_system`) pour qu'au lieu
+de simplement despawn l'ennemie, elle vérifie d'abord si les pv sont à 0. Le cas écheant, on ajouterais à `NewScore`
+le `bonus` de l'ennemi et on despawnerais ce dernier, sinon on decrementerais les `pv` de l'ennemi.
+
+On modifierais le système `update_spaceship_view_system` pour qu'en plus de mettre à jour la position et le sprite
+du joueur, il ajoute à son `score` la valeur de `NewScore` et qu'il reinitialise cette dernière à 0.
+
+On pourrait également créer un nouveau système responsable d'afficher le score du joueur à l'écran.
+
+
+### Ajout d'un système de tir ennemi
+
+Pour gérer les tirs des ennemis, on peut réutiliser notre code en le modifiant un peu.
+On peut créer un nouveau sytème `show_ennemy`, qui va piocher un élément de `EnemiesOnScreen` (qui contient
+une liste des identifiant de tout les ennemis affichés à l'écran).
+
+Il faut modifier l'évènement `PewPewShootedEvent` pour qu'il stocke les coordonnées de spawn du projectile, et
+la translation à lui appliqué lorsqu'on veut le faire se déplacer à l'écran.
+Ensuite il suffirait que le nouveau système `show_ennemy` récupère les coordonnées de l'ennemi sélectionné
+et crée un nouvel évènement.
+
+Il faudrais aussi modifier légèrement le système `handle_input_system`, de telle sorte qu'en plus de déclencher
+un évènement quand le joueur tire, il ajoute également les coordonnées du vaisseau.
+
+Enfin, il faudrais ajouter un systeme pour de detection de colision sur le modèle de `detect_colision_pewew_enemy_system`
+qui s'occupe de décrémenter les pv du joueur en cas de collision.
+
+Enfin, pour éviter les friendly fire, utiliser une paire `(bool, PewPewStatus)` au lieu de l'enum seule, en décidant
+par exemple que si le booléen vaut `true` le projectile à été tiré par le joueur, et que si il vaut `false` il a été
+tiré par un ennemi. De cette manière, on à juste à rajouter un test à `detect_colision_pewew_enemy_system` pour qu'il
+ignore les projectiles tirés par un ennemi.
+
+## IV. Compilation du programme
 
 Pour compiler le programme, il faut avoir installer `cargo` et `rustc` (si possible dans leur dernières version).
 
